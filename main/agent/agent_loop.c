@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "esp_log.h"
 #include "esp_heap_caps.h"
+#include "esp_random.h"
 #include "cJSON.h"
 
 static const char *TAG = "agent";
@@ -100,15 +101,6 @@ static void agent_loop_task(void *arg)
 
         ESP_LOGI(TAG, "Processing message from %s:%s", msg.channel, msg.chat_id);
 
-        /* Send "working" indicator */
-        {
-            mimi_msg_t status = {0};
-            strncpy(status.channel, msg.channel, sizeof(status.channel) - 1);
-            strncpy(status.chat_id, msg.chat_id, sizeof(status.chat_id) - 1);
-            status.content = strdup("mimi\xF0\x9F\x98\x97is working...");
-            if (status.content) message_bus_push_outbound(&status);
-        }
-
         /* 1. Build system prompt */
         context_build_system_prompt(system_prompt, MIMI_CONTEXT_BUF_SIZE);
 
@@ -130,6 +122,23 @@ static void agent_loop_task(void *arg)
         int iteration = 0;
 
         while (iteration < MIMI_AGENT_MAX_TOOL_ITER) {
+            /* Send "working" indicator before each API call */
+            {
+                static const char *working_phrases[] = {
+                    "mimi\xF0\x9F\x98\x97is working...",
+                    "mimi\xF0\x9F\x90\xBE is thinking...",
+                    "mimi\xF0\x9F\x92\xAD is pondering...",
+                    "mimi\xF0\x9F\x8C\x99 is on it...",
+                    "mimi\xE2\x9C\xA8 is cooking...",
+                };
+                const int phrase_count = sizeof(working_phrases) / sizeof(working_phrases[0]);
+                mimi_msg_t status = {0};
+                strncpy(status.channel, msg.channel, sizeof(status.channel) - 1);
+                strncpy(status.chat_id, msg.chat_id, sizeof(status.chat_id) - 1);
+                status.content = strdup(working_phrases[esp_random() % phrase_count]);
+                if (status.content) message_bus_push_outbound(&status);
+            }
+
             llm_response_t resp;
             err = llm_chat_tools(system_prompt, messages, tools_json, &resp);
 
