@@ -106,6 +106,7 @@ idf.py -p /dev/ttyACM0 flash monitor
 mimi> wifi_set YourWiFiName YourWiFiPassword
 mimi> set_tg_token 123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11
 mimi> set_api_key sk-ant-api03-xxxxx
+mimi> set_search_key BSA-xxxxx              # optional: Brave Search API key for web_search
 mimi> restart
 ```
 
