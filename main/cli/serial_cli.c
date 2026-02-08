@@ -7,6 +7,7 @@
 #include "memory/session_mgr.h"
 #include "proxy/http_proxy.h"
 #include "tools/tool_web_search.h"
+#include "heartbeat/heartbeat.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -288,6 +289,18 @@ static int cmd_config_reset(int argc, char **argv)
     return 0;
 }
 
+/* --- heartbeat_trigger command --- */
+static int cmd_heartbeat_trigger(int argc, char **argv)
+{
+    printf("Checking HEARTBEAT.md...\n");
+    if (heartbeat_trigger()) {
+        printf("Heartbeat: agent prompted with pending tasks.\n");
+    } else {
+        printf("Heartbeat: no actionable tasks found.\n");
+    }
+    return 0;
+}
+
 /* --- restart command --- */
 static int cmd_restart(int argc, char **argv)
 {
@@ -457,6 +470,14 @@ esp_err_t serial_cli_init(void)
         .func = &cmd_config_reset,
     };
     esp_console_cmd_register(&config_reset_cmd);
+
+    /* heartbeat_trigger */
+    esp_console_cmd_t heartbeat_cmd = {
+        .command = "heartbeat_trigger",
+        .help = "Manually trigger a heartbeat check",
+        .func = &cmd_heartbeat_trigger,
+    };
+    esp_console_cmd_register(&heartbeat_cmd);
 
     /* restart */
     esp_console_cmd_t restart_cmd = {

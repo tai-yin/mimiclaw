@@ -58,7 +58,12 @@ esp_err_t context_build_system_prompt(char *buf, size_t size)
         "- Always read_file MEMORY.md before writing, so you can edit_file to update without losing existing content.\n"
         "- Use get_current_time to know today's date before writing daily notes.\n"
         "- Keep MEMORY.md concise and organized — summarize, don't dump raw conversation.\n"
-        "- You should proactively save memory without being asked. If the user tells you their name, preferences, or important facts, persist them immediately.\n");
+        "- You should proactively save memory without being asked. If the user tells you their name, preferences, or important facts, persist them immediately.\n\n"
+        "## Heartbeat\n"
+        "The file /spiffs/config/HEARTBEAT.md contains periodic tasks.\n"
+        "When triggered by heartbeat, read the file and execute any pending tasks.\n"
+        "If nothing needs attention, reply with just: HEARTBEAT_OK\n"
+        "You can also write to HEARTBEAT.md to schedule tasks for yourself.\n");
 
     /* Bootstrap files */
     off = append_file(buf, size, off, MIMI_SOUL_FILE, "Personality");

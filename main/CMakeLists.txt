@@ -19,6 +19,7 @@ idf_component_register(
         "tools/tool_files.c"
         "tools/tool_cron.c"
         "cron/cron_service.c"
+        "heartbeat/heartbeat.c"
     INCLUDE_DIRS
         "."
     REQUIRES
