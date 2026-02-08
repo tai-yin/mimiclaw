@@ -79,6 +79,9 @@
 #define MIMI_CONTEXT_BUF_SIZE        (16 * 1024)
 #define MIMI_SESSION_MAX_MSGS        20
 
+/* Skills */
+#define MIMI_SKILLS_PREFIX           "/spiffs/skills/"
+
 /* WebSocket Gateway */
 #define MIMI_WS_PORT                 18789
 #define MIMI_WS_MAX_CLIENTS          4

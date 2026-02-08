@@ -21,6 +21,7 @@
 #include "cli/serial_cli.h"
 #include "proxy/http_proxy.h"
 #include "tools/tool_registry.h"
+#include "skills/skill_loader.h"
 
 static const char *TAG = "mimi";
 
@@ -103,6 +104,7 @@ void app_main(void)
     /* Initialize subsystems */
     ESP_ERROR_CHECK(message_bus_init());
     ESP_ERROR_CHECK(memory_store_init());
+    ESP_ERROR_CHECK(skill_loader_init());
     ESP_ERROR_CHECK(session_mgr_init());
     ESP_ERROR_CHECK(wifi_manager_init());
     ESP_ERROR_CHECK(http_proxy_init());
